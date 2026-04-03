@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>About – MavTr3nT</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<style>
+  :root{--bg:#0c0c0c;--card:#141414;--border:#1e1e1e;--green:#4ade80;--green-glow:rgba(74,222,128,.12);--gold:#fbbf24;--muted:#525252;--text:#a3a3a3;--white:#f5f5f5;--discord:#5865F2;}
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-behavior:smooth;}
+  body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;font-size:15px;line-height:1.7;overflow-x:hidden;padding-bottom:120px;}
+  body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(74,222,128,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(74,222,128,.025) 1px,transparent 1px);background-size:48px 48px;pointer-events:none;z-index:0;}
+  .pixel-snow-container{position:fixed;inset:0;width:100%;height:100%;overflow:hidden;z-index:1;pointer-events:none;contain:layout style paint;}
+  .pixel-snow-container canvas{display:block;width:100%;height:100%;transform:translateZ(0);will-change:transform;backface-visibility:hidden;}
+  nav{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:1.1rem 2rem;background:rgba(12,12,12,.85);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);}
+  .nav-logo{display:flex;align-items:center;gap:.55rem;font-weight:700;font-size:.95rem;color:var(--white);text-decoration:none;}
+  .nav-dot{width:8px;height:8px;background:var(--green);border-radius:50%;box-shadow:0 0 8px var(--green);animation:pulse 2s ease-in-out infinite;}
+  @keyframes pulse{0%,100%{opacity:1;box-shadow:0 0 8px var(--green);}50%{opacity:.4;box-shadow:0 0 3px var(--green);}}
+  .nav-links{display:flex;gap:1.8rem;list-style:none;}
+  .nav-links a{color:var(--muted);text-decoration:none;font-size:.88rem;font-weight:500;transition:color .2s;}
+  .nav-links a:hover{color:var(--white);}
+  .page{position:relative;z-index:2;max-width:720px;margin:0 auto;padding:2rem 1.5rem;}
+  ::-webkit-scrollbar{width:5px;}::-webkit-scrollbar-track{background:var(--bg);}::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
+
+  .about-hero{padding:3rem 0 2rem;}
+  .profile-row{display:flex;align-items:flex-start;gap:2rem;flex-wrap:wrap;}
+  .profile-images{display:flex;flex-direction:column;align-items:center;gap:1rem;flex-shrink:0;}
+  .zeus-wrap{position:relative;width:130px;height:130px;border-radius:50%;overflow:hidden;border:2px solid var(--border);box-shadow:0 0 32px rgba(74,222,128,.15),0 0 0 4px rgba(74,222,128,.06);}
+  .zeus-wrap img{width:100%;height:100%;object-fit:cover;object-position:center 15%;filter:grayscale(10%) contrast(1.05);}
+  .zeus-wrap::after{content:'';position:absolute;inset:0;border-radius:50%;background:linear-gradient(135deg,rgba(74,222,128,.08) 0%,transparent 60%);pointer-events:none;}
+  .skin-wrap{width:60px;height:80px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:10px;overflow:hidden;}
+  .skin-wrap img{width:48px;height:auto;image-rendering:pixelated;}
+  .skin-label{font-family:'Fira Code',monospace;font-size:.6rem;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-top:.3rem;text-align:center;}
+  .profile-text{flex:1;min-width:240px;}
+  .profile-name{font-size:1.9rem;font-weight:700;color:var(--white);line-height:1.1;margin-bottom:.25rem;}
+  .profile-alias{font-family:'Fira Code',monospace;font-size:.8rem;color:var(--green);margin-bottom:.9rem;letter-spacing:.5px;}
+  .profile-tagline{font-size:.95rem;color:var(--text);line-height:1.75;max-width:440px;}
+  .profile-tagline strong{color:var(--white);font-weight:600;}
+
+  .stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:.75rem;margin-top:1.4rem;}
+  .stat-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1rem;text-align:center;}
+  .stat-num{font-family:'IBM Plex Mono',monospace;font-size:1.4rem;font-weight:700;color:var(--green);line-height:1;}
+  .stat-label{font-size:.68rem;color:var(--muted);margin-top:.3rem;letter-spacing:.3px;}
+
+  .divider{border:none;border-top:1px solid var(--border);margin:2.5rem 0;}
+  .section-label{font-size:.72rem;font-weight:500;color:var(--green);letter-spacing:2px;text-transform:uppercase;margin-bottom:1.4rem;font-family:'Fira Code',monospace;}
+
+  .story-grid{display:flex;flex-direction:column;gap:.9rem;}
+  .story-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.3rem 1.5rem;display:flex;gap:1.1rem;align-items:flex-start;transition:border-color .2s,transform .2s;position:relative;isolation:isolate;overflow:hidden;--cone-spread:30;--glow-color:hsl(142deg 70% 55%/100%);--glow-color-60:hsl(142deg 70% 55%/60%);}
+  .story-card:hover{border-color:rgba(74,222,128,.3);transform:translateY(-2px);}
+  .story-card::before{content:'';position:absolute;inset:-1px;border-radius:13px;background:conic-gradient(from calc(var(--cursor-angle,0deg) - var(--cone-spread,30)*1deg),transparent 0deg,var(--glow-color) calc(var(--cone-spread,30)*1deg),var(--glow-color-60) calc(var(--cone-spread,30)*2deg),transparent calc(var(--cone-spread,30)*3deg));opacity:calc(var(--edge-proximity,0)/100);z-index:-1;pointer-events:none;transition:opacity .1s;}
+  .story-card::after{content:'';position:absolute;inset:1px;border-radius:11px;background:var(--card);z-index:-1;pointer-events:none;}
+  .story-icon{font-size:1.4rem;flex-shrink:0;line-height:1;margin-top:.1rem;}
+  .story-title{font-size:.88rem;font-weight:700;color:var(--white);margin-bottom:.3rem;}
+  .story-body{font-size:.85rem;color:var(--text);line-height:1.8;}
+  .story-body strong{color:var(--white);font-weight:600;}
+  .friends-row{display:flex;gap:.6rem;flex-wrap:wrap;margin-top:.7rem;}
+  .friend-tag{font-family:'Fira Code',monospace;font-size:.72rem;padding:.22rem .7rem;border-radius:999px;background:rgba(74,222,128,.06);border:1px solid rgba(74,222,128,.18);color:var(--green);}
+
+  .dock-wrapper{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:999;}
+  .dock-panel{display:flex;align-items:center;gap:10px;padding:10px 14px;background:rgba(20,20,20,0.88);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border:1px solid rgba(255,255,255,0.08);border-radius:20px;box-shadow:0 8px 40px rgba(0,0,0,.7);}
+  .dock-item{position:relative;width:50px;height:50px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.09);border-radius:14px;cursor:pointer;transition:transform .18s cubic-bezier(.4,0,.2,1),background .15s,border-color .15s;flex-shrink:0;text-decoration:none;color:var(--white);}
+  .dock-item:hover{background:rgba(255,255,255,0.11);transform:translateY(-8px);}
+  .dock-item.active{background:rgba(74,222,128,0.1);border-color:rgba(74,222,128,0.3);}
+  .dock-item svg{width:22px;height:22px;stroke:#c0c0c0;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;transition:stroke .15s;pointer-events:none;}
+  .dock-item.active svg{stroke:var(--green);}
+  .dock-item:hover svg{stroke:#fff;}
+  .dock-label{position:absolute;bottom:calc(100% + 10px);left:50%;background:rgba(18,18,18,0.97);border:1px solid rgba(255,255,255,0.1);color:var(--white);font-size:.72rem;font-weight:600;padding:.3rem .75rem;border-radius:8px;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .15s,transform .15s;transform:translateX(-50%) translateY(5px);}
+  .dock-item:hover .dock-label{opacity:1;transform:translateX(-50%) translateY(0);}
+
+  .fade-up{opacity:0;transform:translateY(18px);transition:opacity .5s ease,transform .5s ease;}
+  .fade-up.visible{opacity:1;transform:translateY(0);}
+  @media(max-width:600px){nav{padding:.9rem 1rem;}.nav-links{gap:1rem;}.profile-row{flex-direction:column;align-items:center;}.profile-text{display:flex;flex-direction:column;align-items:center;text-align:center;}}
+</style>
+</head>
+<body>
+
+<div class="pixel-snow-container" id="snow-bg"></div>
+
+<nav>
+  <a class="nav-logo" href="index.html"><span class="nav-dot"></span>MavTr3nT</a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="projects.html">Projects</a></li>
+    <li><a href="index.html#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<div class="page">
+
+  <section class="about-hero fade-up">
+    <div class="profile-row">
+      <div class="profile-images">
+        <div class="zeus-wrap">
+          <img src="zeus.webp" alt="Profile"/>
+        </div>
+        <div class="skin-wrap">
+          <img src="skin.png" alt="Minecraft skin"/>
+        </div>
+        <div class="skin-label">MC skin</div>
+      </div>
+      <div class="profile-text">
+        <h1 class="profile-name">Ioec</h1>
+        <p class="profile-alias">aka MavTr3nT</p>
+        <p class="profile-tagline">
+          Minecraft developer, server builder, and self-taught coder. I started with nothing but curiosity and a couple of good friends — now I'm building <strong>Java plugins</strong> and proud of every line.
+        </p>
+        <div class="stats-row">
+          <div class="stat-card">
+            <div class="stat-num">2016</div>
+            <div class="stat-label">Playing MC since</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-num">2+</div>
+            <div class="stat-label">Years developing</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-num">Java</div>
+            <div class="stat-label">Current focus</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider"/>
+
+  <section class="fade-up">
+    <p class="section-label">// my story</p>
+    <div class="story-grid">
+
+      <div class="story-card">
+        <div class="story-icon">🎮</div>
+        <div>
+          <div class="story-title">How it all started</div>
+          <div class="story-body">I've been on Minecraft since <strong>2016</strong>, but it wasn't until I got my first PC in <strong>2020</strong> that servers really hooked me. Playing on them made me wonder — how are these actually built? That question stuck with me for years.</div>
+        </div>
+      </div>
+
+      <div class="story-card">
+        <div class="story-icon">📜</div>
+        <div>
+          <div class="story-title">Learning Skript — with a little help</div>
+          <div class="story-body">In <strong>2024</strong> I finally stopped wondering and started doing. Two friends taught me <strong>Skript</strong> and helped me find my footing. We helped each other, and I went from zero to building real stuff fast.</div>
+          <div class="friends-row">
+            <span class="friend-tag">ThatOneDevil</span>
+            <span class="friend-tag">Hannaan7Real</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="story-card">
+        <div class="story-icon">☕</div>
+        <div>
+          <div class="story-title">Moving into Java</div>
+          <div class="story-body">After two years of developing I pushed myself further and started writing <strong>Java plugins</strong> from scratch. It's a different beast, but I've been making things I'm genuinely proud of — and I'm nowhere near done. More is coming soon.</div>
+        </div>
+      </div>
+
+      <div class="story-card">
+        <div class="story-icon">🌐</div>
+        <div>
+          <div class="story-title">Why this website exists</div>
+          <div class="story-body">I built this whole site to turn the thing I love into something real. I want to <strong>earn money doing what I actually enjoy</strong> — building Minecraft plugins, managing servers, and creating experiences for players. If you've got a project, let's talk.</div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+</div>
+
+<!-- DOCK -->
+<div class="dock-wrapper">
+  <div class="dock-panel">
+    <a href="index.html" class="dock-item">
+      <svg viewBox="0 0 24 24"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9.5z"/><path d="M9 21V12h6v9"/></svg>
+      <span class="dock-label">Home</span>
+    </a>
+    <a href="about.html" class="dock-item active">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+      <span class="dock-label">About</span>
+    </a>
+    <a href="projects.html" class="dock-item">
+      <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+      <span class="dock-label">Projects</span>
+    </a>
+  </div>
+</div>
+
+<script>
+document.querySelectorAll('.fade-up').forEach(el=>new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');}),{threshold:.1}).observe(el));
+document.querySelectorAll('.story-card').forEach(card=>{
+  card.addEventListener('pointermove',e=>{
+    const r=card.getBoundingClientRect(),x=e.clientX-r.left,y=e.clientY-r.top;
+    const cx=r.width/2,cy=r.height/2,dx=x-cx,dy=y-cy;
+    let kx=dx?cx/Math.abs(dx):Infinity,ky=dy?cy/Math.abs(dy):Infinity;
+    card.style.setProperty('--edge-proximity',(Math.min(Math.max(1/Math.min(kx,ky),0),1)*100).toFixed(2));
+    let deg=Math.atan2(dy,dx)*(180/Math.PI)+90;if(deg<0)deg+=360;
+    card.style.setProperty('--cursor-angle',deg.toFixed(2)+'deg');
+  });
+  card.addEventListener('pointerleave',()=>card.style.setProperty('--edge-proximity','0'));
+});
+</script>
+<script>
+(function(){
+  const vSh=`void main(){gl_Position=vec4(position,1.0);}`;
+  const fSh=`precision mediump float;uniform float uTime;uniform vec2 uResolution;uniform float uFlakeSize;uniform float uMinFlakeSize;uniform float uPixelResolution;uniform float uSpeed;uniform float uDepthFade;uniform float uFarPlane;uniform vec3 uColor;uniform float uBrightness;uniform float uGamma;uniform float uDensity;uniform float uVariant;uniform float uDirection;
+#define PI_OVER_6 0.5235988
+#define PI_OVER_3 1.0471976
+#define M1 1597334677U
+#define M2 3812015801U
+#define M3 3299493293U
+#define F0 2.3283064e-10
+#define hsh(n) (n*(n^(n>>15)))
+#define coord3(p) (uvec3(p).x*M1^uvec3(p).y*M2^uvec3(p).z*M3)
+const vec3 camK=vec3(0.57735027,0.57735027,0.57735027);const vec3 camI=vec3(0.70710678,0.0,-0.70710678);const vec3 camJ=vec3(-0.40824829,0.81649658,-0.40824829);const vec2 b1d=vec2(0.574,0.819);
+vec3 hash3(uint n){uvec3 h=hsh(n)*uvec3(1U,511U,262143U);return vec3(h)*F0;}
+float snowflakeDist(vec2 p){float r=length(p);float a=atan(p.y,p.x);a=abs(mod(a+PI_OVER_6,PI_OVER_3)-PI_OVER_6);vec2 q=r*vec2(cos(a),sin(a));float dM=max(abs(q.y),max(-q.x,q.x-1.0));float b1t=clamp(dot(q-vec2(0.4,0.0),b1d),0.0,0.4);float dB1=length(q-vec2(0.4,0.0)-b1t*b1d);float b2t=clamp(dot(q-vec2(0.7,0.0),b1d),0.0,0.25);float dB2=length(q-vec2(0.7,0.0)-b2t*b1d);return min(dM,min(dB1,dB2))*10.0;}
+void main(){float iP=1.0/uPixelResolution;float ps=max(1.0,floor(0.5+uResolution.x*iP));float ips=1.0/ps;vec2 fc=floor(gl_FragCoord.xy*ips);vec2 res=uResolution*ips;float iRX=1.0/res.x;vec3 ray=normalize(vec3((fc-res*0.5)*iRX,1.0));ray=ray.x*camI+ray.y*camJ+ray.z*camK;float ts=uTime*uSpeed;float wX=cos(uDirection)*0.4;float wY=sin(uDirection)*0.4;vec3 cPos=(wX*camI+wY*camJ+0.1*camK)*ts;vec3 pos=cPos;vec3 aR=max(abs(ray),vec3(0.001));vec3 st=1.0/aR;vec3 rS=step(ray,vec3(0.0));vec3 ph=fract(pos)*st;ph=mix(st-ph,ph,rS);float rDK=dot(ray,camK);float iRDK=1.0/rDK;float iDF=1.0/uDepthFade;float hIRX=0.5*iRX;vec3 tA=ts*0.1*vec3(7.0,8.0,5.0);float t=0.0;for(int i=0;i<128;i++){if(t>=uFarPlane)break;vec3 fp=floor(pos);uint cc=coord3(fp);float ch=hash3(cc).x;if(ch<uDensity){vec3 h=hash3(cc);vec3 s1=fp.yzx*0.073;vec3 s2=fp.zxy*0.27;vec3 fP=0.5-0.5*cos(4.0*sin(s1)+4.0*sin(s2)+2.0*h+tA);fP=fP*0.8+0.1+fp;float tI=dot(fP-pos,camK)*iRDK;if(tI>0.0){vec3 tP=pos+ray*tI-fP;float tX=dot(tP,camI);float tY=dot(tP,camJ);vec2 tUV=abs(vec2(tX,tY));float dep=dot(fP-cPos,camK);float fs=max(uFlakeSize,uMinFlakeSize*dep*hIRX);float dist;if(uVariant<0.5){dist=max(tUV.x,tUV.y);}else if(uVariant<1.5){dist=length(tUV);}else{dist=snowflakeDist(vec2(tX,tY)/fs)*fs;}if(dist<fs){float fr=uFlakeSize/fs;float intensity=exp2(-(t+tI)*iDF)*min(1.0,fr*fr)*uBrightness;gl_FragColor=vec4(uColor*pow(vec3(intensity),vec3(uGamma)),1.0);return;}}}float nS=min(min(ph.x,ph.y),ph.z);vec3 sel=step(ph,vec3(nS));ph=ph-nS+st*sel;t+=nS;pos=mix(pos+ray*nS,floor(pos+ray*nS+0.5),sel);}gl_FragColor=vec4(0.0);}`;
+  const cont=document.getElementById('snow-bg');
+  const{OrthographicCamera,Scene,PlaneGeometry,Mesh,ShaderMaterial,WebGLRenderer,Vector2,Color,Vector3}=THREE;
+  const rend=new WebGLRenderer({antialias:false,alpha:true,premultipliedAlpha:false,powerPreference:'high-performance',stencil:false,depth:false});
+  rend.setPixelRatio(Math.min(window.devicePixelRatio,2));rend.setSize(window.innerWidth,window.innerHeight);rend.setClearColor(0,0);cont.appendChild(rend.domElement);
+  const scene=new Scene(),cam=new OrthographicCamera(-1,1,1,-1,0,1);
+  const col=new Color('#e8f0ff');
+  const mat=new ShaderMaterial({vertexShader:vSh,fragmentShader:fSh,uniforms:{uTime:{value:0},uResolution:{value:new Vector2(window.innerWidth,window.innerHeight)},uFlakeSize:{value:.01},uMinFlakeSize:{value:1.25},uPixelResolution:{value:200},uSpeed:{value:1.25},uDepthFade:{value:8},uFarPlane:{value:20},uColor:{value:new Vector3(col.r,col.g,col.b)},uBrightness:{value:1},uGamma:{value:.4545},uDensity:{value:.3},uVariant:{value:0},uDirection:{value:125*Math.PI/180}},transparent:true});
+  scene.add(new Mesh(new PlaneGeometry(2,2),mat));
+  let rt;window.addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(()=>{rend.setSize(window.innerWidth,window.innerHeight);mat.uniforms.uResolution.value.set(window.innerWidth,window.innerHeight);},100);});
+  const t0=performance.now();(function loop(){requestAnimationFrame(loop);mat.uniforms.uTime.value=(performance.now()-t0)*.001;rend.render(scene,cam);})();
+})();
+</script>
+</body>
+</html>
